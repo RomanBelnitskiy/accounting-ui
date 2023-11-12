@@ -1,82 +1,68 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import MaterialTable from "material-table";
+import ReceiptIcon from "@material-ui/icons/Receipt";
 
-export default function PartTable() {
-  const baseUrl = "http://localhost:8080/parts";
+export default function EnclosureTable() {
+  const baseUrl = "http://localhost:8080/enclosures";
 
   const columns = [
-    { title: "Артикул", field: "reference", sorting: false, align: "right" },
+    { title: "#", field: "id", sorting: false, align: "right" },
     {
       title: "Назва",
       field: "name",
       cellStyle: { fontWeight: "bold", fontStyle: "italic" },
     },
     {
-      title: "Ціна",
-      field: "price",
+      title: "К-ть",
+      field: "qty",
       align: "right",
-      type: "currency",
-      currencySetting: { locale: "ua", currencyCode: "UAH" },
       sorting: false,
       grouping: false,
     },
     {
       title: "Од.вим.",
-      field: "unit",
+      field: "id",
       align: "center",
-      lookup: { SHT: "шт.", M: "м", M_KV: "м.кв." },
+      render: () => "шт.",
       searchable: false,
       export: false,
     },
-    {
-      title: "Тип",
-      field: "partType",
-      searchable: false,
-      export: false,
-      lookup: {
-        CIRCUIT_BREAKER: "Автоматичний вимикач",
-        CAPACITOR: "Контактор",
-        RELAY: "Реле",
-        FUSE: "Запобіжник",
-        SWITCH: "Вимикач навантаження",
-        ENCLOSURE: "Корпус",
-        WIRE: "Провід",
-        ADAPTER: "Наконечник",
-        BUS: "Шина",
-        CURRENT_TRANSFORMER: "Трансформатор струму",
-      },
-    },
-    {
-      title: "Виробник",
-      field: "manufacturer",
-    },
+    // {
+    //   title: "Ціна",
+    //   field: "price",
+    //   align: "right",
+    //   type: "currency",
+    //   currencySetting: { locale: "ua", currencyCode: "UAH" },
+    //   sorting: false,
+    //   grouping: false,
+    // },
   ];
-  const [parts, setParts] = useState([]);
+  const [enclosures, setEnclosures] = useState([]);
   useEffect(() => {
     axios.get(baseUrl).then(function (response) {
-      setParts(response.data);
+      setEnclosures(response.data);
     });
   }, []);
 
   return (
     <MaterialTable
       columns={columns}
-      data={parts}
+      data={enclosures}
       editable={{
-        onRowAdd: (newPart) =>
+        onRowAdd: (newEnclosure) =>
           new Promise((resolve, reject) => {
-            axios.post(baseUrl, newPart).then(function (response) {
-              setParts([...parts, response.data]);
+            axios.post(baseUrl, newEnclosure).then(function (response) {
+              setEnclosures([...enclosures, response.data]);
               resolve();
             });
           }),
-        onRowUpdate: (newPart, oldPart) =>
+        onRowUpdate: (newEnclosure, oldEnclosure) =>
           new Promise((resolve, reject) => {
-            axios.put(baseUrl, newPart).then(function (response) {
-              const updatedParts = [...parts];
-              updatedParts[oldPart.tableData.id] = response.data;
-              setParts(updatedParts);
+            axios.put(baseUrl, newEnclosure).then(function (response) {
+              const updatedEnclosures = [...enclosures];
+              updatedEnclosures[oldEnclosure.tableData.id] = response.data;
+              setEnclosures(updatedEnclosures);
               resolve();
             });
           }),
@@ -84,13 +70,21 @@ export default function PartTable() {
           new Promise((resolve, rejejct) => {
             const url = baseUrl.concat("/", selectedRow.id);
             axios.delete(url).then(function (response) {
-              const updatedParts = [...parts];
-              updatedParts.splice(selectedRow.tableData.id, 1);
-              setParts(updatedParts);
+              const updatedEnclosures = [...enclosures];
+              updatedEnclosures.splice(selectedRow.tableData.id, 1);
+              setEnclosures(updatedEnclosures);
               resolve();
             });
           }),
       }}
+      actions={[
+        {
+          icon: () => <ReceiptIcon />,
+          tooltip: "View parts",
+          onClick: (event, enclosure) => console.log(enclosure),
+          position: "row",
+        },
+      ]}
       onSelectionChange={(selectedRows) => console.log(selectedRows)}
       options={{
         searchFieldVariant: "filled",
@@ -109,7 +103,7 @@ export default function PartTable() {
           index % 2 === 0 ? { background: "#f5f5f5" } : null,
         headerStyle: { fontWeight: "bold" },
       }}
-      title="Деталі"
+      title="Щити"
     />
   );
 }

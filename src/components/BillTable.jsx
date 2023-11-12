@@ -165,7 +165,7 @@ export default function BillTable() {
         grouping: true,
         columnsButton: true,
         rowStyle: (data, index) =>
-          index % 2 == 0 ? { background: "#f5f5f5" } : null,
+          index % 2 === 0 ? { background: "#f5f5f5" } : null,
         headerStyle: { fontWeight: "bold" },
       }}
       title="Список рахунків"

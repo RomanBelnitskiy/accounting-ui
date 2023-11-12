@@ -8,6 +8,8 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import BillTable from "./BillTable";
 import PartTable from "./PartTable";
+import EnclosureTable from "./EnclosureTable";
+import ProjectTable from "./ProjectTable";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -72,7 +74,7 @@ export default function MainMenu() {
           <Tab label="Рахунки" {...a11yProps(0)} />
           <Tab label="Проекти" {...a11yProps(1)} />
           <Tab label="Щити" {...a11yProps(2)} />
-          <Tab label="Item Four" {...a11yProps(3)} />
+          <Tab label="Запчастини" {...a11yProps(3)} />
           <Tab label="Item Five" {...a11yProps(4)} />
           <Tab label="Item Six" {...a11yProps(5)} />
           <Tab label="Деталі" {...a11yProps(6)} />
@@ -82,13 +84,13 @@ export default function MainMenu() {
         <BillTable />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Проекти
+        <ProjectTable />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Щити
+        <EnclosureTable />
       </TabPanel>
       <TabPanel value={value} index={3}>
-        Item Four
+        Запчастини
       </TabPanel>
       <TabPanel value={value} index={4}>
         Item Five
